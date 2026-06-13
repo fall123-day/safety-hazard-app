@@ -2,7 +2,7 @@
   "name": "建筑施工安全隐患查询系统",
   "short_name": "安全隐患查询",
   "description": "建筑施工安全隐患查询与管理系统",
-  "start_url": "./app.html",
+  "start_url": "./app-lite.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#1565c0",

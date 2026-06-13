@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1565c0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<title>建筑施工安全隐患查询系统</title>
+<style>
+:root{--bg:#f5f5f5;--card:#fff;--text:#333;--text2:#666;--border:#e0e0e0;--accent:#1976d2;--accent-light:#e3f2fd;--font:system-ui,sans-serif;--size:14px;--radius:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);font-size:var(--size);background:var(--bg);color:var(--text);min-height:100vh}
+.hd{background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:100}
+.hd h1{font-size:18px;font-weight:700}
+.hd .st{font-size:11px;opacity:.85;margin-top:4px;display:flex;gap:12px}
+.sa{padding:10px 16px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:52px;z-index:99}
+.sb{display:flex;gap:6px}
+.si{flex:1;padding:8px 12px;border:2px solid var(--border);border-radius:var(--radius);font-size:14px;outline:none}
+.si:focus{border-color:var(--accent)}
+.sbtn{padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:600}
+.fb{padding:8px 16px;display:flex;gap:6px;flex-wrap:wrap;overflow-x:auto}
+.fb label{font-size:12px;font-weight:600;color:var(--text2);white-space:nowrap;line-height:28px}
+.fbtn{padding:4px 10px;border:1px solid var(--border);border-radius:16px;background:var(--card);color:var(--text);cursor:pointer;font-size:11px;white-space:nowrap}
+.fbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tb{padding:6px 16px;display:flex;gap:4px;flex-wrap:wrap}
+.tbtn{padding:3px 8px;border:1px solid var(--border);border-radius:4px;background:var(--card);font-size:11px;cursor:pointer}
+.tbtn.active{background:var(--accent);color:#fff}
+.mc{padding:8px 16px 40px}
+.ri{padding:6px 0;font-size:12px;color:var(--text2);display:flex;justify-content:space-between}
+.cs{margin-bottom:16px}
+.ch{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--accent-light);border-radius:var(--radius) var(--radius) 0 0;border-left:3px solid var(--accent);cursor:pointer}
+.ch h2{font-size:14px;color:var(--accent);flex:1}
+.ch .cnt{font-size:11px;background:var(--accent);color:#fff;padding:1px 8px;border-radius:10px}
+.hl{background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);max-height:60vh;overflow-y:auto}
+.hc{padding:10px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.hc:last-child{border-bottom:none}
+.hc.expanded{background:#f8f9ff}
+.ct{font-size:13px;font-weight:600;line-height:1.4}
+.hl{display:none}
+.ch.open+.hl{display:block}
+.stag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;margin-left:6px;vertical-align:middle}
+.sr{background:#ffebee;color:#c62828}.so{background:#fff3e0;color:#e65100}.sy{background:#fffde7;color:#f57f17}.sb2{background:#e3f2fd;color:#1565c0}
+.hd{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed #e0e0e0}
+.hc.expanded .hd{display:block}
+.dl{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:2px}
+.dt{font-size:12px;color:var(--text2);line-height:1.6;padding-left:12px;margin-bottom:6px}
+.tg{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.tg span{font-size:10px;padding:1px 6px;background:#f0f0f0;border-radius:8px;color:var(--text2)}
+.ca{display:flex;gap:6px;margin-top:6px}
+.ca button{padding:3px 8px;border:1px solid var(--border);border-radius:4px;background:var(--card);font-size:11px;cursor:pointer}
+.ca .fav{background:#fff3e0;border-color:#f57c00;color:#f57c00}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(0,0,0,.8);color:#fff;padding:8px 20px;border-radius:16px;font-size:13px;z-index:9999;transition:transform .3s}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.empty{text-align:center;padding:40px;color:#999;font-size:14px}
+@media(max-width:480px){.hd h1{font-size:15px}.si{font-size:13px}}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>🏗️ 建筑施工安全隐患查询系统</h1>
+  <div class="st"><span>📊 <b id="tc">0</b>条</span><span>📂 <b id="cc">0</b>类</span><span>⭐ <b id="fc">0</b></span></div>
+</div>
+<div class="sa">
+  <div class="sb">
+    <input type="text" class="si" id="si" placeholder="搜索隐患...">
+    <button class="sbtn" id="sb">搜索</button>
+  </div>
+</div>
+<div class="fb" id="fb"><label>分类：</label><button class="fbtn active" data-c="all">全部</button></div>
+<div class="tb" id="tb">
+  <button class="tbtn active" data-s="all">全部</button>
+  <button class="tbtn" data-s="red">🔴重大</button>
+  <button class="tbtn" data-s="orange">🟠较大</button>
+  <button class="tbtn" data-s="yellow">🟡一般</button>
+  <button class="fbtn" id="fvb">⭐收藏</button>
+</div>
+<div class="mc">
+  <div class="ri" id="ri"></div>
+  <div id="hc"></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var D=[],C=JSON.parse(localStorage.getItem('sc')||'[]'),F=JSON.parse(localStorage.getItem('sf')||'[]'),fil={c:'all',s:'all',k:'',f:false};
+function gm(){return D.concat(C)}
+function init(){
+  fetch('data.json').then(r=>r.json()).then(d=>{D=d;go()}).catch(()=>go())
+}
+function go(){
+  var d=gm(),cats=[],
+  cats=[...new Set(d.map(h=>h.cat))];
+  document.getElementById('tc').textContent=d.length;
+  document.getElementById('cc').textContent=cats.length;
+  document.getElementById('fc').textContent=F.length;
+  buildFB(cats);render()
+}
+function buildFB(cats){
+  var b=document.getElementById('fb');
+  b.innerHTML='<label>分类：</label><button class="fbtn active" data-c="all">全部</button>';
+  cats.forEach(c=>{
+    var btn=document.createElement('button');
+    btn.className='fbtn';btn.dataset.c=c;btn.textContent=c;
+    btn.onclick=()=>{b.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('active'));btn.classList.add('active');fil.c=c;render()};
+    b.appendChild(btn)
+  });
+}
+function gf(){
+  var l=gm();
+  if(fil.c!=='all')l=l.filter(h=>h.cat===fil.c);
+  if(fil.s!=='all')l=l.filter(h=>h.severity===fil.s);
+  if(fil.f)l=l.filter(h=>F.indexOf(h.id)!==-1);
+  if(fil.k){var kw=fil.k.toLowerCase();l=l.filter(h=>h.t.toLowerCase().includes(kw)||h.r.toLowerCase().includes(kw)||h.m.toLowerCase().includes(kw)||(h.g&&h.g.some(t=>t.includes(kw)))||h.cat.includes(kw))}
+  return l
+}
+function render(){
+  var c=document.getElementById('hc'),f=gf(),m={red:'重大',orange:'较大',yellow:'一般',blue:'提示'};
+  document.getElementById('ri').innerHTML='<span>'+f.length+'条</span>'+(fil.k?'<span>"'+fil.k+'"</span>':'');
+  if(!f.length){c.innerHTML='<div class="empty">🔍 未找到匹配记录</div>';return}
+  var g={};f.forEach(h=>{if(!g[h.cat])g[h.cat]=[];g[h.cat].push(h)});
+  var html='';
+  Object.keys(g).forEach(cat=>{
+    var items=g[cat];
+    html+='<div class="cs"><div class="ch" onclick="this.classList.toggle(\'open\')"><h2>'+cat+'</h2><span class="cnt">'+items.length+'</span></div><div class="hl">';
+    items.forEach(h=>{
+      var isF=F.indexOf(h.id)!==-1,isC=C.some(x=>x.id===h.id);
+      var tg=(h.g||[]).map(t=>'<span>'+t+'</span>').join('');
+      html+='<div class="hc" onclick="this.classList.toggle(\'expanded\')"><div class="ct">'+h.t+'<span class="stag s'+h.severity[0]+'">'+m[h.severity]+'</span>'+(isC?' 📥':'')+'</div><div class="hd"><div class="dl">❌ 问题</div><div class="dt">'+h.r+'</div><div class="dl">✅ 措施</div><div class="dt">'+h.m+'</div>'+(h.ref?'<div class="dl">📖 依据</div><div class="dt">'+h.ref+'</div>':'')+'<div class="tg">'+tg+'</div><div class="ca"><button '+(isF?'class="fav"':'')+' onclick="event.stopPropagation();tfav(\''+h.id+'\')">'+(isF?'⭐':'☆')+'收藏</button><button onclick="event.stopPropagation();copy(\''+h.id+'\')">📋</button>'+(isC?'<button onclick="event.stopPropagation();del(\''+h.id+'\')" style="color:red">🗑</button>':'')+'</div></div></div>'
+    });
+    html+='</div></div>'
+  });
+  c.innerHTML=html
+}
+function tfav(id){var i=F.indexOf(id);if(i===-1){F.push(id);toast('⭐ 已收藏')}else{F.splice(i,1);toast('取消收藏')}localStorage.setItem('sf',JSON.stringify(F));document.getElementById('fc').textContent=F.length;render()}
+function copy(id){var h=gm().find(x=>x.id===id);if(h){navigator.clipboard.writeText('【隐患】'+h.t+'\n【问题】'+h.r+'\n【措施】'+h.m+(h.ref?'\n【依据】'+h.ref:'')).then(()=>toast('📋 已复制'))}}
+function del(id){if(!confirm('确定删除？'))return;C=C.filter(h=>h.id!==id);localStorage.setItem('sc',JSON.stringify(C));init();toast('已删除')}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
+document.querySelectorAll('[data-s]').forEach(b=>{b.onclick=()=>{document.querySelectorAll('[data-s]').forEach(x=>x.classList.remove('active'));b.classList.add('active');fil.s=b.dataset.s;render()}});
+document.getElementById('fvb').onclick=function(){fil.f=!fil.f;this.classList.toggle('active');render()};
+document.getElementById('si').addEventListener('input',e=>{fil.k=e.target.value.trim();render()});
+document.getElementById('sb').onclick=()=>{fil.k=document.getElementById('si').value.trim();render()};
+document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter'){fil.k=e.target.value.trim();render()}});
+init();
+</script>
+</body>
+</html>

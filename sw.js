@@ -1,6 +1,7 @@
-const CACHE_NAME = 'safety-hazard-v1';
+const CACHE_NAME = 'safety-hazard-v2';
 const ASSETS = [
-  './app.html',
+  './app-lite.html',
+  './data.json',
   './manifest.json'
 ];
 
